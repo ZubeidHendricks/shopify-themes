@@ -1,0 +1,17 @@
+{
+  "name": "Warm Boutique",
+  "theme_name": "Warm Boutique",
+  "description": "Soft warm neutrals, rounded corners, serif headings. Beauty / home / lifestyle.",
+  "settings": {
+    "color_background": "#faf6f0",
+    "color_foreground": "#3a3026",
+    "color_accent": "#b07d56",
+    "color_accent_text": "#ffffff",
+    "font_heading": "playfair_display_n7",
+    "font_body": "assistant_n4",
+    "page_width": 1200,
+    "spacing_sections": 56,
+    "buttons_radius": 28,
+    "inputs_radius": 12
+  }
+}

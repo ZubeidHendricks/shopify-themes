@@ -1,0 +1,17 @@
+{
+  "name": "Bold Pop",
+  "theme_name": "Bold Pop",
+  "description": "Vibrant, high-energy color and chunky buttons. DTC / supplements / streetwear.",
+  "settings": {
+    "color_background": "#fffdf7",
+    "color_foreground": "#16161d",
+    "color_accent": "#ff4d2e",
+    "color_accent_text": "#ffffff",
+    "font_heading": "montserrat_n8",
+    "font_body": "assistant_n4",
+    "page_width": 1300,
+    "spacing_sections": 52,
+    "buttons_radius": 40,
+    "inputs_radius": 16
+  }
+}

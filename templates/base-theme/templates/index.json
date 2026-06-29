@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "hero": { "type": "hero-banner", "settings": {} },
+    "featured": { "type": "featured-collection", "settings": {} },
+    "image_with_text": { "type": "image-with-text", "settings": {} },
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "c1": { "type": "column", "settings": { "heading": "Free shipping", "text": "<p>On all orders over $50.</p>" } },
+        "c2": { "type": "column", "settings": { "heading": "Easy returns", "text": "<p>30-day no-hassle returns.</p>" } },
+        "c3": { "type": "column", "settings": { "heading": "Secure checkout", "text": "<p>Encrypted and protected.</p>" } }
+      },
+      "block_order": ["c1", "c2", "c3"]
+    },
+    "newsletter": { "type": "newsletter", "settings": {} }
+  },
+  "order": ["hero", "featured", "image_with_text", "multicolumn", "newsletter"]
+}

@@ -1,0 +1,55 @@
+<div class="blog section">
+  <div class="page-width">
+    <h1>{{ blog.title }}</h1>
+
+    {%- paginate blog.articles by section.settings.posts_per_page -%}
+      <div class="grid grid--{{ section.settings.columns }}">
+        {%- for article in blog.articles -%}
+          <article class="article-card">
+            <a href="{{ article.url }}" class="article-card__link">
+              <div class="article-card__media">
+                {%- if article.image -%}
+                  {{ article.image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 600', alt: article.title }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: '' }}
+                {%- endif -%}
+              </div>
+              <h2 class="article-card__title">{{ article.title }}</h2>
+            </a>
+            <p class="article-card__meta"><small>{{ article.published_at | date: '%B %-d, %Y' }}</small></p>
+            {%- if section.settings.show_excerpt -%}
+              <p class="article-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" role="navigation">
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+            {%- else -%}<span aria-current="page">{{ part.title }}</span>{%- endif -%}
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .article-card__media img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--inputs-radius); }
+  .article-card__title { font-size: 1.25rem; margin: 0.5rem 0 0.25rem; }
+  .article-card__link { text-decoration: none; display: block; }
+  .article-card__meta { opacity: 0.65; margin: 0 0 0.5rem; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "settings": [
+    { "type": "range", "id": "posts_per_page", "label": "Posts per page", "min": 6, "max": 24, "step": 3, "default": 9 },
+    { "type": "range", "id": "columns", "label": "Columns", "min": 1, "max": 4, "step": 1, "default": 3 },
+    { "type": "checkbox", "id": "show_excerpt", "label": "Show excerpt", "default": true }
+  ]
+}
+{% endschema %}

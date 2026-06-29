@@ -1,0 +1,25 @@
+{%- comment -%}
+  Maps theme settings -> CSS custom properties. This is the seam the factory uses:
+  presets only change settings_data.json, and the whole look re-skins from here.
+{%- endcomment -%}
+<style>
+  :root {
+    --color-background: {{ settings.color_background.red }}, {{ settings.color_background.green }}, {{ settings.color_background.blue }};
+    --color-foreground: {{ settings.color_foreground.red }}, {{ settings.color_foreground.green }}, {{ settings.color_foreground.blue }};
+    --color-accent: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
+    --color-accent-text: {{ settings.color_accent_text.red }}, {{ settings.color_accent_text.green }}, {{ settings.color_accent_text.blue }};
+
+    --font-heading-family: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
+    --font-heading-weight: {{ settings.font_heading.weight }};
+    --font-body-family: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
+    --font-body-weight: {{ settings.font_body.weight }};
+
+    --page-width: {{ settings.page_width }}px;
+    --spacing-sections: {{ settings.spacing_sections }}px;
+    --buttons-radius: {{ settings.buttons_radius }}px;
+    --inputs-radius: {{ settings.inputs_radius }}px;
+  }
+
+  {{ settings.font_body | font_face: font_display: 'swap' }}
+  {{ settings.font_heading | font_face: font_display: 'swap' }}
+</style>

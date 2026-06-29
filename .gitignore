@@ -1,0 +1,5 @@
+node_modules/
+# Composed artifacts are generated from source (core + preset + overrides).
+themes/*/dist/
+themes/*/*.zip
+.DS_Store

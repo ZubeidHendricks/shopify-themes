@@ -1,0 +1,17 @@
+{
+  "name": "Noir Luxe",
+  "theme_name": "Noir Luxe",
+  "description": "Dark, premium, gold accents. Jewelry / spirits / high-end accessories.",
+  "settings": {
+    "color_background": "#0e0e10",
+    "color_foreground": "#f2efe9",
+    "color_accent": "#c9a24b",
+    "color_accent_text": "#0e0e10",
+    "font_heading": "cormorant_garamond_n6",
+    "font_body": "assistant_n4",
+    "page_width": 1280,
+    "spacing_sections": 60,
+    "buttons_radius": 2,
+    "inputs_radius": 2
+  }
+}

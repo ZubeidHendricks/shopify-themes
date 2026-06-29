@@ -1,0 +1,40 @@
+<header class="header section">
+  <div class="page-width header__inner">
+    <a href="{{ routes.root_url }}" class="header__logo">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 300 | image_tag: loading: 'eager', alt: shop.name, widths: '150, 300' }}
+      {%- else -%}
+        <span class="header__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="header__nav" role="navigation">
+      <ul class="header__menu">
+        {%- for link in section.settings.menu.links -%}
+          <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <a href="{{ routes.cart_url }}" class="header__cart" aria-label="{{ 'accessibility.cart' | t }}">
+      {{ 'accessibility.cart' | t }} ({{ cart.item_count }})
+    </a>
+  </div>
+</header>
+
+{% stylesheet %}
+  .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+  .header__menu { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+  .header__menu a { text-decoration: none; }
+  .header__logo-text { font-family: var(--font-heading-family); font-size: 1.25rem; font-weight: var(--font-heading-weight); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,55 @@
+<div class="cart section">
+  <div class="page-width">
+    <h1>{{ 'cart.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      {% form 'cart', cart %}
+        <ul class="cart__items">
+          {%- for item in cart.items -%}
+            <li class="cart__item">
+              <div class="cart__item-media">
+                {%- if item.image -%}
+                  {{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100, 200', alt: item.title }}
+                {%- endif -%}
+              </div>
+              <div class="cart__item-info">
+                <a href="{{ item.url }}">{{ item.product.title }}</a>
+                {%- unless item.variant.title contains 'Default' -%}<small>{{ item.variant.title }}</small>{%- endunless -%}
+                <div>{{ item.final_line_price | money }}</div>
+              </div>
+              <div class="cart__item-qty">
+                <label class="visually-hidden" for="Qty-{{ item.index | plus: 1 }}">{{ 'products.product.quantity' | t }}</label>
+                <input type="number" id="Qty-{{ item.index | plus: 1 }}" name="updates[]" value="{{ item.quantity }}" min="0">
+                <a href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="cart__footer">
+          <div class="cart__subtotal">
+            <span>{{ 'cart.subtotal' | t }}</span>
+            <strong>{{ cart.total_price | money }}</strong>
+          </div>
+          <p class="cart__note"><small>{{ 'cart.taxes_note' | t }}</small></p>
+          <button type="submit" name="update" class="button button--secondary">{{ 'cart.title' | t }}</button>
+          <button type="submit" name="checkout" class="button">{{ 'cart.checkout' | t }}</button>
+        </div>
+      {% endform %}
+    {%- else -%}
+      <p>{{ 'cart.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="button">{{ 'cart.continue_shopping' | t }}</a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cart__items { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
+  .cart__item { display: grid; grid-template-columns: 80px 1fr auto; gap: 1rem; align-items: center; }
+  .cart__footer { margin-top: 2rem; display: grid; gap: 0.75rem; justify-items: end; }
+  .cart__subtotal { display: flex; gap: 1rem; font-size: 1.25rem; }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

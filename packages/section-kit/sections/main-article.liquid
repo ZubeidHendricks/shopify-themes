@@ -1,0 +1,52 @@
+<article class="article section">
+  <div class="page-width article__narrow">
+    <header class="article__header">
+      <h1>{{ article.title }}</h1>
+      <p class="article__meta"><small>{{ article.published_at | date: '%B %-d, %Y' }}{% if article.author != blank %} · {{ article.author }}{% endif %}</small></p>
+    </header>
+
+    {%- if article.image -%}
+      <div class="article__media">
+        {{ article.image | image_url: width: 1400 | image_tag: loading: 'eager', widths: '700, 1100, 1400', sizes: '100vw', alt: article.title }}
+      </div>
+    {%- endif -%}
+
+    <div class="rte article__content">{{ article.content }}</div>
+
+    {%- if blog.comments_enabled? -%}
+      <section class="article__comments">
+        {%- if article.comments_count > 0 -%}
+          <h2>{{ article.comments_count }} comments</h2>
+          {%- for comment in article.comments -%}
+            <div class="comment">
+              <p>{{ comment.content }}</p>
+              <p><small>— {{ comment.author }}</small></p>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {% form 'new_comment', article %}
+          {%- if form.posted_successfully? -%}<p>Thanks — your comment was posted.</p>{%- endif -%}
+          <div class="comment-form">
+            <input type="text" name="comment[author]" placeholder="Name" required>
+            <input type="email" name="comment[email]" placeholder="Email" required>
+            <textarea name="comment[body]" placeholder="Comment" rows="4" required></textarea>
+            <button type="submit" class="button">Post comment</button>
+          </div>
+        {% endform %}
+      </section>
+    {%- endif -%}
+  </div>
+</article>
+
+{% stylesheet %}
+  .article__narrow { max-width: 44rem; margin: 0 auto; }
+  .article__media { margin: 1.5rem 0; }
+  .article__media img { width: 100%; border-radius: var(--inputs-radius); }
+  .article__meta { opacity: 0.65; }
+  .comment-form { display: grid; gap: 0.75rem; max-width: 32rem; margin-top: 1rem; }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

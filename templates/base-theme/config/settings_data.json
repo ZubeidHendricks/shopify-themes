@@ -1,0 +1,16 @@
+{
+  "current": {
+    "color_background": "#ffffff",
+    "color_foreground": "#1a1a1a",
+    "color_accent": "#1a1a1a",
+    "color_accent_text": "#ffffff",
+    "font_heading": "assistant_n4",
+    "font_body": "assistant_n4",
+    "page_width": 1200,
+    "spacing_sections": 48,
+    "buttons_radius": 6,
+    "inputs_radius": 6,
+    "social_twitter_handle": ""
+  },
+  "presets": {}
+}

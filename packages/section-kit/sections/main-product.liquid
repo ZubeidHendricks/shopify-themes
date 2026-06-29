@@ -1,0 +1,76 @@
+<div class="product section">
+  <div class="page-width product__layout">
+    <div class="product__media">
+      {%- if product.featured_media -%}
+        {{ product.featured_media | image_url: width: 1200 | image_tag:
+            loading: 'eager', widths: '600, 900, 1200', sizes: '(min-width: 750px) 50vw, 100vw',
+            alt: product.featured_media.alt | default: product.title }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product__placeholder' }}
+      {%- endif -%}
+      {%- if product.media.size > 1 -%}
+        <div class="product__thumbs grid grid--4">
+          {%- for media in product.media offset: 1 limit: 7 -%}
+            {{ media | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100, 200', alt: media.alt }}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="product__info">
+      <h1>{{ product.title }}</h1>
+      <div class="product__price">{% render 'price', product: product %}</div>
+
+      {%- assign current_variant = product.selected_or_first_available_variant -%}
+      {% form 'product', product, id: 'ProductForm' %}
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <div class="product__option">
+              <label for="Option-{{ forloop.index }}">{{ option.name }}</label>
+              <select id="Option-{{ forloop.index }}" name="options[{{ option.name | escape }}]">
+                {%- for value in option.values -%}
+                  <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+        <div class="product__quantity">
+          <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
+          <input type="number" id="Quantity" name="quantity" value="1" min="1">
+        </div>
+
+        <button type="submit" name="add" class="button product__atc"{% unless current_variant.available %} disabled{% endunless %}>
+          {%- if current_variant.available -%}
+            {{ 'products.product.add_to_cart' | t }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- endif -%}
+        </button>
+      {% endform %}
+
+      {%- if product.description != blank -%}
+        <div class="product__description rte">{{ product.description }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .product__layout { display: grid; gap: 2rem; }
+  @media (min-width: 750px) { .product__layout { grid-template-columns: 1fr 1fr; } }
+  .product__info { display: grid; gap: 1rem; align-content: start; }
+  .product__thumbs { margin-top: 1rem; }
+  .product__atc { width: 100%; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product information",
+  "settings": [],
+  "presets": [{ "name": "Product information" }]
+}
+{% endschema %}

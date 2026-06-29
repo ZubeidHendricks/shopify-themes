@@ -1,0 +1,19 @@
+{%- comment -%} Shared newsletter signup, posts to Shopify customer list. {%- endcomment -%}
+{% form 'customer', class: 'newsletter-form' %}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  {%- if form.posted_successfully? -%}
+    <p class="newsletter-form__success">{{ 'general.newsletter.success' | t }}</p>
+  {%- else -%}
+    <label class="visually-hidden" for="NewsletterEmail">{{ 'general.newsletter.label' | t }}</label>
+    <div class="newsletter-form__row">
+      <input
+        id="NewsletterEmail"
+        type="email"
+        name="contact[email]"
+        autocomplete="email"
+        placeholder="{{ 'general.newsletter.placeholder' | t }}"
+        required>
+      <button type="submit" class="button">{{ 'general.newsletter.button' | t }}</button>
+    </div>
+  {%- endif -%}
+{% endform %}

@@ -1,0 +1,46 @@
+<div class="featured-collection section">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section__header">
+        <h2>{{ section.settings.heading }}</h2>
+        {%- if section.settings.collection != blank -%}
+          <a href="{{ collections[section.settings.collection].url }}" class="link">{{ 'collections.view_all' | t }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="grid grid--{{ section.settings.columns }}">
+      {%- assign collection = collections[section.settings.collection] -%}
+      {%- if collection != blank -%}
+        {%- for product in collection.products limit: section.settings.products_to_show -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..section.settings.products_to_show) -%}
+          <div class="product-card">
+            {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
+            <h3 class="product-card__title">{{ 'products.product.unavailable' | t }}</h3>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .section__header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; }
+  .featured-collection .link { white-space: nowrap; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Featured products" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "label": "Products", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns", "label": "Columns", "min": 2, "max": 4, "step": 1, "default": 4 }
+  ],
+  "presets": [{ "name": "Featured collection" }]
+}
+{% endschema %}

@@ -1,0 +1,68 @@
+/* Shared base stylesheet. Looks are driven by CSS vars from css-variables.liquid,
+   so presets restyle the whole theme without touching this file. */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  line-height: 1.6;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+}
+img, svg, video { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+
+.page-width { max-width: var(--page-width); margin: 0 auto; padding: 0 1.5rem; }
+.section { padding: calc(var(--spacing-sections) * 1px) 0; }
+
+.visually-hidden {
+  position: absolute !important; overflow: hidden;
+  width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  clip: rect(0 0 0 0); word-wrap: normal;
+}
+.skip-to-content-link:focus {
+  position: fixed; top: 1rem; left: 1rem; width: auto; height: auto;
+  clip: auto; z-index: 1000; padding: 0.75rem 1rem;
+  background: rgb(var(--color-background)); color: rgb(var(--color-foreground));
+}
+
+.button {
+  display: inline-block; cursor: pointer; text-decoration: none;
+  padding: 0.75rem 1.5rem; border: 0;
+  border-radius: var(--buttons-radius);
+  background: rgb(var(--color-accent)); color: rgb(var(--color-accent-text));
+  font-family: var(--font-body-family); font-weight: 600; line-height: 1;
+}
+.button:hover { opacity: 0.9; }
+.button--secondary {
+  background: transparent; color: rgb(var(--color-foreground));
+  box-shadow: 0 0 0 1px rgb(var(--color-foreground));
+}
+
+input, select, textarea {
+  border-radius: var(--inputs-radius);
+  border: 1px solid rgba(var(--color-foreground), 0.3);
+  padding: 0.6rem 0.75rem; font: inherit;
+  background: rgb(var(--color-background)); color: rgb(var(--color-foreground));
+}
+
+/* Product card (rendered via snippets/product-card.liquid) */
+.product-card__link { text-decoration: none; display: block; }
+.product-card__title { font-size: 1rem; margin: 0.5rem 0 0.25rem; }
+.product-card__media img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--inputs-radius); }
+.price--on-sale .price__current { color: rgb(var(--color-accent)); }
+.price__compare { opacity: 0.6; margin-left: 0.4rem; }
+
+.grid { display: grid; gap: 1.5rem; }
+@media (min-width: 750px) {
+  .grid--2 { grid-template-columns: repeat(2, 1fr); }
+  .grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .grid--4 { grid-template-columns: repeat(4, 1fr); }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Factory Base",
+    "theme_version": "0.1.0",
+    "theme_author": "Zubeid Hendricks",
+    "theme_documentation_url": "https://github.com/ZubeidHendricks/shopify-themes",
+    "theme_support_url": "https://github.com/ZubeidHendricks/shopify-themes/issues"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_background", "label": "Background", "default": "#ffffff" },
+      { "type": "color", "id": "color_foreground", "label": "Text", "default": "#1a1a1a" },
+      { "type": "color", "id": "color_accent", "label": "Accent / buttons", "default": "#1a1a1a" },
+      { "type": "color", "id": "color_accent_text", "label": "Accent text", "default": "#ffffff" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "font_heading", "label": "Headings", "default": "assistant_n4" },
+      { "type": "font_picker", "id": "font_body", "label": "Body", "default": "assistant_n4" }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      { "type": "range", "id": "page_width", "label": "Page width", "min": 1000, "max": 1600, "step": 20, "unit": "px", "default": 1200 },
+      { "type": "range", "id": "spacing_sections", "label": "Section spacing", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 48 },
+      { "type": "range", "id": "buttons_radius", "label": "Button corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 6 },
+      { "type": "range", "id": "inputs_radius", "label": "Input corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 6 }
+    ]
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon" },
+      { "type": "text", "id": "social_twitter_handle", "label": "X / Twitter handle", "info": "e.g. @yourstore" }
+    ]
+  }
+]

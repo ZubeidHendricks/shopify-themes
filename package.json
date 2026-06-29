@@ -1,0 +1,18 @@
+{
+  "name": "shopify-themes",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Factory for a portfolio of Shopify Online Store 2.0 Liquid themes on a shared core.",
+  "scripts": {
+    "new": "node scripts/new-theme.mjs",
+    "build": "node scripts/build-theme.mjs",
+    "build:all": "node scripts/build-theme.mjs --all",
+    "verify": "node scripts/verify-theme.mjs",
+    "check": "shopify theme check",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
