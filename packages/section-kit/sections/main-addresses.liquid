@@ -1,0 +1,83 @@
+{%- comment -%} Customer address book: list + add + edit + delete. {%- endcomment -%}
+<div class="customer customer--addresses section">
+  <div class="page-width customer__narrow-wide">
+    <header class="customer__header">
+      <h1>{{ 'customer.addresses.title' | t }}</h1>
+      <a href="{{ routes.account_url }}">&larr; {{ 'customer.account.title' | t }}</a>
+    </header>
+
+    <button type="button" class="button" data-address-toggle="AddressNew">{{ 'customer.addresses.add_new' | t }}</button>
+
+    <div id="AddressNew" class="customer__address-form customer__hidden">
+      <h2>{{ 'customer.addresses.add_new' | t }}</h2>
+      {% form 'customer_address', customer.new_address %}
+        {% render 'address-fields', form: form %}
+        <button type="submit" class="button">{{ 'customer.addresses.add' | t }}</button>
+        <button type="button" class="button button--secondary" data-address-toggle="AddressNew">{{ 'customer.addresses.cancel' | t }}</button>
+      {% endform %}
+    </div>
+
+    {%- paginate customer.addresses by 10 -%}
+      {%- for address in customer.addresses -%}
+        <div class="customer__address">
+          {%- if address == customer.default_address -%}
+            <p><strong>{{ 'customer.addresses.default' | t }}</strong></p>
+          {%- endif -%}
+          {{ address | format_address }}
+          <div class="customer__address-actions">
+            <button type="button" class="link" data-address-toggle="EditAddress-{{ address.id }}">{{ 'customer.addresses.edit' | t }}</button>
+            <a href="{{ address.url }}" data-address-delete data-confirm="{{ 'customer.addresses.delete_confirm' | t }}">{{ 'customer.addresses.delete' | t }}</a>
+          </div>
+
+          <div id="EditAddress-{{ address.id }}" class="customer__address-form customer__hidden">
+            {% form 'customer_address', address %}
+              {% render 'address-fields', form: form, address: address %}
+              <button type="submit" class="button">{{ 'customer.addresses.update' | t }}</button>
+              <button type="button" class="button button--secondary" data-address-toggle="EditAddress-{{ address.id }}">{{ 'customer.addresses.cancel' | t }}</button>
+            {% endform %}
+          </div>
+        </div>
+      {%- endfor -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" role="navigation">
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+            {%- else -%}<span aria-current="page">{{ part.title }}</span>{%- endif -%}
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    document.querySelectorAll('[data-address-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var el = document.getElementById(btn.dataset.addressToggle);
+        if (el) el.classList.toggle('customer__hidden');
+      });
+    });
+    document.querySelectorAll('[data-address-delete]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        if (!window.confirm(link.dataset.confirm)) { e.preventDefault(); return; }
+        e.preventDefault();
+        fetch(link.href, { method: 'POST', headers: { 'X-HTTP-Method-Override': 'DELETE' } })
+          .then(function () { window.location.reload(); });
+      });
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  .customer__narrow-wide { max-width: 44rem; margin: 0 auto; }
+  .customer__address { padding: 1.25rem 0; border-bottom: 1px solid rgba(var(--color-foreground), 0.15); }
+  .customer__address-actions { display: flex; gap: 1rem; margin-top: 0.5rem; }
+  .customer__address-form { margin: 1rem 0; display: grid; gap: 0.75rem; }
+  .link { background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; color: inherit; font: inherit; }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Addresses", "settings": [] }
+{% endschema %}

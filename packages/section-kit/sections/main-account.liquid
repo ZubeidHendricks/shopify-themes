@@ -1,0 +1,60 @@
+<div class="customer customer--account section">
+  <div class="page-width">
+    <header class="customer__header">
+      <h1>{{ 'customer.account.title' | t }}</h1>
+      <a href="{{ routes.account_logout_url }}">{{ 'customer.account.log_out' | t }}</a>
+    </header>
+
+    <p class="customer__hello">{{ 'customer.account.welcome' | t: name: customer.name }}</p>
+    <p><a href="{{ routes.account_addresses_url }}">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+
+    <h2>{{ 'customer.orders.title' | t }}</h2>
+    {%- paginate customer.orders by 20 -%}
+      {%- if customer.orders.size > 0 -%}
+        <table class="customer__orders">
+          <thead>
+            <tr>
+              <th>{{ 'customer.orders.order_number' | t }}</th>
+              <th>{{ 'customer.orders.date' | t }}</th>
+              <th>{{ 'customer.orders.payment_status' | t }}</th>
+              <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+              <th>{{ 'customer.orders.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for order in customer.orders -%}
+              <tr>
+                <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+                <td>{{ order.created_at | date: '%b %-d, %Y' }}</td>
+                <td>{{ order.financial_status_label }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>{{ order.total_net_amount | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" role="navigation">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}<span aria-current="page">{{ part.title }}</span>{%- endif -%}
+            {%- endfor -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <p>{{ 'customer.orders.none' | t }}</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .customer__header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .customer__orders { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  .customer__orders th, .customer__orders td { text-align: left; padding: 0.6rem 0.5rem; border-bottom: 1px solid rgba(var(--color-foreground), 0.15); }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Account", "settings": [] }
+{% endschema %}

@@ -1,0 +1,60 @@
+<div class="customer customer--order section">
+  <div class="page-width">
+    <p><a href="{{ routes.account_url }}">&larr; {{ 'customer.account.title' | t }}</a></p>
+    <h1>{{ 'customer.order.title' | t: name: order.name }}</h1>
+    <p><small>{{ order.created_at | date: '%B %-d, %Y %l:%M%P' }}</small></p>
+
+    <table class="customer__orders">
+      <thead>
+        <tr>
+          <th>{{ 'customer.order.product' | t }}</th>
+          <th>{{ 'customer.order.price' | t }}</th>
+          <th>{{ 'customer.order.quantity' | t }}</th>
+          <th>{{ 'customer.order.total' | t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for line_item in order.line_items -%}
+          <tr>
+            <td><a href="{{ line_item.product.url }}">{{ line_item.title }}</a></td>
+            <td>{{ line_item.price | money }}</td>
+            <td>{{ line_item.quantity }}</td>
+            <td>{{ line_item.final_line_price | money }}</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+      <tfoot>
+        <tr><td colspan="3">{{ 'customer.order.subtotal' | t }}</td><td>{{ order.line_items_subtotal_price | money }}</td></tr>
+        {%- for shipping_method in order.shipping_methods -%}
+          <tr><td colspan="3">{{ 'customer.order.shipping' | t }} ({{ shipping_method.title }})</td><td>{{ shipping_method.price | money }}</td></tr>
+        {%- endfor -%}
+        {%- for tax_line in order.tax_lines -%}
+          <tr><td colspan="3">{{ 'customer.order.tax' | t }} ({{ tax_line.title }})</td><td>{{ tax_line.price | money }}</td></tr>
+        {%- endfor -%}
+        <tr><td colspan="3"><strong>{{ 'customer.order.total' | t }}</strong></td><td><strong>{{ order.total_net_amount | money }}</strong></td></tr>
+      </tfoot>
+    </table>
+
+    <div class="grid grid--2 customer__addresses">
+      <div>
+        <h2>{{ 'customer.order.billing_address' | t }}</h2>
+        <p>{{ order.billing_address.status_label }}</p>
+        {{ order.billing_address | format_address }}
+      </div>
+      <div>
+        <h2>{{ 'customer.order.shipping_address' | t }}</h2>
+        <p>{{ order.shipping_address.status_label }}</p>
+        {{ order.shipping_address | format_address }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .customer--order .customer__orders { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; }
+  .customer--order th, .customer--order td { text-align: left; padding: 0.6rem 0.5rem; border-bottom: 1px solid rgba(var(--color-foreground), 0.15); }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Order", "settings": [] }
+{% endschema %}

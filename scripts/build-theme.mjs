@@ -45,6 +45,14 @@ function build(slug) {
   // 6. Per-theme overrides overlay (custom sections/templates win).
   copyTree(join(themeDir, 'overrides'), dist);
 
+  // Theme Check config (local lint only — excluded from the upload zip).
+  // ValidScopedCSSClass is off by design: shared looks live in base.css (the
+  // restyle seam), so classes are intentionally used across sections.
+  writeFileSync(
+    join(dist, '.theme-check.yml'),
+    'extends: theme-check:recommended\nValidScopedCSSClass:\n  enabled: false\n'
+  );
+
   // 7. Zip for manual upload (Online Store > Themes > Upload).
   try {
     const zip = join(themeDir, `${slug}.zip`);

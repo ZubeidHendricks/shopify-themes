@@ -86,7 +86,8 @@ Partner / Payment Apps APIs. Add it to your editor to get Liquid-aware autocompl
 - [x] Generator + compose/zip + structural verify + tests
 - [x] 4 presets (Minimal Mono, Warm Boutique, Bold Pop, Noir Luxe)
 - [x] `blog` / `article` / `password` / `gift_card` templates (+ password layout)
-- [ ] `customers/*` templates (login, account, register, addresses, order)
+- [x] `customers/*` templates (login, account, register, addresses, order, activate, reset)
+- [x] Passes real `shopify theme check` — **0 offenses** across both demo themes
 - [ ] More presets / section packs
 - [ ] Predictive search + cart drawer JS (for Theme Store polish)
-- [ ] Run real `shopify theme check` against a flagship before submission
+- [ ] Submit a flagship to the Theme Store

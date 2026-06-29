@@ -1,0 +1,73 @@
+<div class="customer customer--login section">
+  <div class="page-width customer__narrow">
+    <h1>{{ 'customer.login.title' | t }}</h1>
+
+    <div id="RecoverPassword" class="customer__hidden">
+      <h2>{{ 'customer.recover_password.title' | t }}</h2>
+      <p>{{ 'customer.recover_password.subtext' | t }}</p>
+      {% form 'recover_customer_password' %}
+        {%- if form.posted_successfully? -%}
+          <p class="customer__success">{{ 'customer.recover_password.success' | t }}</p>
+        {%- endif -%}
+        <div class="customer__field">
+          <label for="RecoverEmail">{{ 'customer.login.email' | t }}</label>
+          <input type="email" id="RecoverEmail" name="email" autocomplete="email" required>
+        </div>
+        <button type="submit" class="button">{{ 'customer.recover_password.submit' | t }}</button>
+        <a href="#" data-toggle="login">{{ 'customer.recover_password.cancel' | t }}</a>
+      {% endform %}
+    </div>
+
+    <div id="LoginForm">
+      {% form 'customer_login' %}
+        {{ form.errors | default_errors }}
+        <div class="customer__field">
+          <label for="LoginEmail">{{ 'customer.login.email' | t }}</label>
+          <input type="email" id="LoginEmail" name="customer[email]" autocomplete="email" required>
+        </div>
+        {%- if form.password_needed -%}
+          <div class="customer__field">
+            <label for="LoginPassword">{{ 'customer.login.password' | t }}</label>
+            <input type="password" id="LoginPassword" name="customer[password]" autocomplete="current-password" required>
+          </div>
+          <a href="#" data-toggle="recover">{{ 'customer.login.forgot_password' | t }}</a>
+        {%- endif -%}
+        <button type="submit" class="button">{{ 'customer.login.submit' | t }}</button>
+      {% endform %}
+
+      {%- unless shop.customer_accounts_optional == false -%}
+        <p class="customer__alt">
+          {{ 'customer.login.new_customer' | t }}
+          <a href="{{ routes.account_register_url }}">{{ 'customer.login.create_account' | t }}</a>
+        </p>
+      {%- endunless -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var recover = document.getElementById('RecoverPassword');
+    var login = document.getElementById('LoginForm');
+    if (!recover || !login) return;
+    function show(which) {
+      recover.classList.toggle('customer__hidden', which !== 'recover');
+      login.classList.toggle('customer__hidden', which === 'recover');
+    }
+    document.querySelectorAll('[data-toggle]').forEach(function (el) {
+      el.addEventListener('click', function (e) { e.preventDefault(); show(el.dataset.toggle); });
+    });
+    if (window.location.hash === '#recover') show('recover');
+  })();
+</script>
+
+{% stylesheet %}
+  .customer__narrow { max-width: 28rem; margin: 0 auto; }
+  .customer__field { display: grid; gap: 0.35rem; margin-bottom: 1rem; }
+  .customer__hidden { display: none; }
+  .customer__alt { margin-top: 1.5rem; }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Login", "settings": [] }
+{% endschema %}

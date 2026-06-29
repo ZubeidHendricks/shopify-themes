@@ -23,6 +23,11 @@ const REQUIRED = [
   'templates/password.json',
   'templates/gift_card.liquid',
   'layout/password.liquid',
+  'templates/customers/login.json',
+  'templates/customers/account.json',
+  'templates/customers/register.json',
+  'templates/customers/addresses.json',
+  'templates/customers/order.json',
 ];
 
 function verify(slug) {
@@ -45,7 +50,7 @@ function verify(slug) {
 
   // 3. Every section `type` referenced in templates + section groups exists, and JSON parses.
   const jsonFiles = [];
-  for (const dir of ['templates', 'sections']) {
+  for (const dir of ['templates', 'templates/customers', 'sections']) {
     const d = join(dist, dir);
     if (existsSync(d)) {
       for (const f of readdirSync(d)) {
