@@ -62,9 +62,22 @@ npm run build:all                                     # rebuild every theme
 npm test                                              # factory unit tests
 ```
 
-Upload `themes/<slug>/dist/` (or the `.zip`) via **Online Store → Themes → Add theme →
-Upload zip**, or `shopify theme push --path themes/<slug>/dist` with the
-[Shopify CLI](https://shopify.dev/docs/api/shopify-cli).
+### Preview & deploy (Shopify CLI)
+
+`dev`/`push` rebuild the theme first, then hand off to the CLI against `dist/`:
+
+```bash
+npm run dev  -- coastal-mono --store=your-store.myshopify.com   # hot-reload preview at :9292
+npm run push -- coastal-mono --unpublished                      # upload as an unpublished theme
+```
+
+Set the store once to drop the flag: `export SHOPIFY_FLAG_STORE=your-store.myshopify.com`
+(add to `~/.zshrc`). The first `dev`/`push` opens your browser to authorize the store.
+A free **Partner development store with sample data** is the best preview target — an empty
+store shows placeholder tiles and no predictive-search results (expected, not a bug).
+
+You can also upload `themes/<slug>/dist/` (or the `.zip`) manually via
+**Online Store → Themes → Add theme → Upload zip**.
 
 ## Per-theme customization
 

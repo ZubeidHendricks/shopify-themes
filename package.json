@@ -8,6 +8,8 @@
     "new": "node scripts/new-theme.mjs",
     "build": "node scripts/build-theme.mjs",
     "build:all": "node scripts/build-theme.mjs --all",
+    "dev": "node scripts/run-theme.mjs dev",
+    "push": "node scripts/run-theme.mjs push",
     "verify": "node scripts/verify-theme.mjs",
     "check": "shopify theme check",
     "test": "node --test test/*.test.mjs"
