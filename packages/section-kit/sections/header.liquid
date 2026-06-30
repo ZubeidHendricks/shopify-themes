@@ -16,9 +16,21 @@
       </ul>
     </nav>
 
-    <a href="{{ routes.cart_url }}" class="header__cart" aria-label="{{ 'accessibility.cart' | t }}">
-      {{ 'accessibility.cart' | t }} ({{ cart.item_count }})
-    </a>
+    <div class="header__actions">
+      {%- if section.settings.show_search -%}
+        <div class="header__search" data-predictive>
+          <form action="{{ routes.search_url }}" method="get" role="search">
+            <input type="search" name="q" autocomplete="off" data-predictive-input
+              placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.search' | t }}">
+          </form>
+          <div class="predictive" data-predictive-results hidden></div>
+        </div>
+      {%- endif -%}
+
+      <button type="button" class="header__cart" data-cart-toggle aria-label="{{ 'accessibility.cart' | t }}">
+        {{ 'accessibility.cart' | t }} (<span data-cart-count>{{ cart.item_count }}</span>)
+      </button>
+    </div>
   </div>
 </header>
 
@@ -34,7 +46,8 @@
   "name": "Header",
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Logo" },
-    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true }
   ]
 }
 {% endschema %}

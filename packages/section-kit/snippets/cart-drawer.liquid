@@ -1,0 +1,45 @@
+{%- comment -%} AJAX cart drawer. Initial state rendered server-side; cart.js rebuilds on change. {%- endcomment -%}
+<div id="CartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="{{ 'cart.title' | t }}">
+  <div class="cart-drawer__overlay" data-cart-close></div>
+  <aside class="cart-drawer__panel">
+    <header class="cart-drawer__header">
+      <h2>{{ 'cart.title' | t }}</h2>
+      <button type="button" class="cart-drawer__close" data-cart-close aria-label="{{ 'accessibility.close' | t }}">&times;</button>
+    </header>
+
+    <ul id="CartDrawerItems" class="cart-drawer__items" data-empty="{{ 'cart.empty' | t }}">
+      {%- for item in cart.items -%}
+        <li class="cart-drawer__item" data-key="{{ item.key }}">
+          <div class="cart-drawer__media">
+            {%- if item.image -%}
+              {{ item.image | image_url: width: 120 | image_tag: loading: 'lazy', widths: '60, 120', alt: item.title }}
+            {%- endif -%}
+          </div>
+          <div class="cart-drawer__details">
+            <a href="{{ item.url }}">{{ item.product.title }}</a>
+            {%- unless item.variant.title contains 'Default' -%}<small>{{ item.variant.title }}</small>{%- endunless -%}
+            <div class="cart-drawer__price">{{ item.final_line_price | money }}</div>
+          </div>
+          <div class="cart-drawer__qty">
+            <button type="button" data-change="-1" aria-label="Decrease">&minus;</button>
+            <span>{{ item.quantity }}</span>
+            <button type="button" data-change="1" aria-label="Increase">&plus;</button>
+            <button type="button" data-remove aria-label="{{ 'cart.remove' | t }}">&times;</button>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    <footer id="CartDrawerFooter" class="cart-drawer__footer"{% if cart.item_count == 0 %} hidden{% endif %}>
+      <div class="cart-drawer__subtotal">
+        <span>{{ 'cart.subtotal' | t }}</span>
+        <strong id="CartDrawerSubtotal">{{ cart.total_price | money }}</strong>
+      </div>
+      <p class="cart-drawer__note"><small>{{ 'cart.taxes_note' | t }}</small></p>
+      <a href="{{ routes.cart_url }}" class="button button--secondary">{{ 'cart.title' | t }}</a>
+      <form action="{{ routes.cart_url }}" method="post">
+        <button type="submit" name="checkout" class="button cart-drawer__checkout">{{ 'cart.checkout' | t }}</button>
+      </form>
+    </footer>
+  </aside>
+</div>

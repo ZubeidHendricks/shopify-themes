@@ -25,9 +25,21 @@
     {% render 'meta-tags' %}
     {% render 'css-variables' %}
 
+    <script>
+      window.Shopify = window.Shopify || {};
+      window.Shopify.routes = {
+        root: {{ routes.root_url | json }},
+        cart: {{ routes.cart_url | json }},
+        predictive_search_url: {{ routes.predictive_search_url | json }}
+      };
+      window.Shopify.moneyFormat = {{ shop.money_format | json }};
+    </script>
+
     {{ content_for_header }}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'cart.js' | asset_url }}" defer></script>
+    <script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
   </head>
 
   <body class="template-{{ request.page_type | handle }}">
@@ -42,5 +54,7 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {% render 'cart-drawer' %}
   </body>
 </html>
