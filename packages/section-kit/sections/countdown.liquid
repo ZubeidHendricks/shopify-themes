@@ -1,0 +1,77 @@
+{%- assign uid = section.id | replace: '-', '_' -%}
+<div class="countdown section" style="text-align: {{ section.settings.text_align }};">
+  <div class="page-width countdown__inner">
+    {%- if section.settings.heading != blank -%}<h2>{{ section.settings.heading }}</h2>{%- endif -%}
+    {%- if section.settings.subtext != blank -%}<p>{{ section.settings.subtext }}</p>{%- endif -%}
+
+    <div class="countdown__timer" id="Countdown-{{ uid }}"
+         data-deadline="{{ section.settings.date }}T{{ section.settings.time }}:00"
+         data-expired="{{ section.settings.expired_text | escape }}">
+      <div class="countdown__unit"><span data-days>--</span><small>Days</small></div>
+      <div class="countdown__unit"><span data-hours>--</span><small>Hrs</small></div>
+      <div class="countdown__unit"><span data-minutes>--</span><small>Min</small></div>
+      <div class="countdown__unit"><span data-seconds>--</span><small>Sec</small></div>
+    </div>
+
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link }}" class="button">{{ section.settings.button_label }}</a>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('Countdown-{{ uid }}');
+    if (!root) return;
+    var deadline = new Date(root.dataset.deadline).getTime();
+    if (isNaN(deadline)) return;
+    var out = {
+      days: root.querySelector('[data-days]'),
+      hours: root.querySelector('[data-hours]'),
+      minutes: root.querySelector('[data-minutes]'),
+      seconds: root.querySelector('[data-seconds]')
+    };
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function tick() {
+      var diff = deadline - Date.now();
+      if (diff <= 0) {
+        root.innerHTML = '<p class="countdown__expired">' + (root.dataset.expired || '') + '</p>';
+        clearInterval(timer);
+        return;
+      }
+      var s = Math.floor(diff / 1000);
+      out.days.textContent = Math.floor(s / 86400);
+      out.hours.textContent = pad(Math.floor((s % 86400) / 3600));
+      out.minutes.textContent = pad(Math.floor((s % 3600) / 60));
+      out.seconds.textContent = pad(s % 60);
+    }
+    var timer = setInterval(tick, 1000);
+    tick();
+  })();
+</script>
+
+{% stylesheet %}
+  .countdown__inner { display: grid; gap: 1rem; justify-items: center; }
+  .countdown__timer { display: flex; gap: 1rem; }
+  .countdown__unit { display: grid; justify-items: center; min-width: 3.5rem; padding: 0.75rem; border-radius: var(--inputs-radius); background: rgba(var(--color-foreground), 0.06); }
+  .countdown__unit span { font-size: 2rem; font-family: var(--font-heading-family); line-height: 1; }
+  .countdown__unit small { opacity: 0.65; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Countdown",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Sale ends soon" },
+    { "type": "text", "id": "subtext", "label": "Subtext", "default": "Don't miss out." },
+    { "type": "text", "id": "date", "label": "End date (YYYY-MM-DD)", "default": "2026-12-31", "info": "Local time." },
+    { "type": "text", "id": "time", "label": "End time (HH:MM, 24h)", "default": "23:59" },
+    { "type": "text", "id": "expired_text", "label": "Expired message", "default": "This offer has ended." },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "select", "id": "text_align", "label": "Alignment", "default": "center",
+      "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }] }
+  ],
+  "presets": [{ "name": "Countdown" }]
+}
+{% endschema %}

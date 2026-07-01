@@ -1,0 +1,55 @@
+<div class="logo-list section">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section__header" style="text-align: center;"><h2>{{ section.settings.heading }}</h2></div>
+    {%- endif -%}
+
+    <div class="logo-list__grid">
+      {%- for block in section.blocks -%}
+        <div class="logo-list__item" {{ block.shopify_attributes }}>
+          {%- assign logo = block.settings.image -%}
+          {%- capture img -%}
+            {%- if logo != blank -%}
+              {{ logo | image_url: width: 320 | image_tag: loading: 'lazy', class: 'logo-list__img', widths: '160, 320', alt: block.settings.name | default: 'Brand logo' }}
+            {%- else -%}
+              {{ 'logo' | placeholder_svg_tag: 'logo-list__img logo-list__placeholder' }}
+            {%- endif -%}
+          {%- endcapture -%}
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}">{{ img }}</a>
+          {%- else -%}
+            {{ img }}
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .logo-list__grid { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2.5rem; }
+  .logo-list__img { height: 40px; width: auto; object-fit: contain; opacity: 0.7; filter: grayscale(1); transition: opacity 0.2s, filter 0.2s; }
+  .logo-list__item:hover .logo-list__img { opacity: 1; filter: grayscale(0); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Logo list",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "As seen in" }
+  ],
+  "blocks": [
+    {
+      "type": "logo", "name": "Logo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Logo" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Logo list", "blocks": [{ "type": "logo" }, { "type": "logo" }, { "type": "logo" }, { "type": "logo" }] }
+  ]
+}
+{% endschema %}

@@ -12,7 +12,35 @@
       },
       "block_order": ["c1", "c2", "c3"]
     },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "t1": { "type": "testimonial", "settings": { "name": "Alex P.", "quote": "<p>Best purchase I've made this year.</p>" } },
+        "t2": { "type": "testimonial", "settings": { "name": "Jordan M.", "quote": "<p>Quality exceeded my expectations.</p>" } },
+        "t3": { "type": "testimonial", "settings": { "name": "Sam R.", "quote": "<p>Fast shipping and great support.</p>" } }
+      },
+      "block_order": ["t1", "t2", "t3"]
+    },
+    "logos": {
+      "type": "logo-list",
+      "blocks": {
+        "l1": { "type": "logo", "settings": {} },
+        "l2": { "type": "logo", "settings": {} },
+        "l3": { "type": "logo", "settings": {} },
+        "l4": { "type": "logo", "settings": {} }
+      },
+      "block_order": ["l1", "l2", "l3", "l4"]
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "f1": { "type": "item", "settings": {} },
+        "f2": { "type": "item", "settings": { "question": "How long does shipping take?", "answer": "<p>2–5 business days.</p>" } },
+        "f3": { "type": "item", "settings": { "question": "Do you ship internationally?", "answer": "<p>Yes, to most countries.</p>" } }
+      },
+      "block_order": ["f1", "f2", "f3"]
+    },
     "newsletter": { "type": "newsletter", "settings": {} }
   },
-  "order": ["hero", "featured", "image_with_text", "multicolumn", "newsletter"]
+  "order": ["hero", "featured", "image_with_text", "multicolumn", "testimonials", "logos", "faq", "newsletter"]
 }

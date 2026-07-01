@@ -1,0 +1,51 @@
+<div class="faq section">
+  <div class="page-width faq__inner">
+    {%- if section.settings.heading != blank -%}
+      <div class="section__header"><h2>{{ section.settings.heading }}</h2></div>
+    {%- endif -%}
+
+    <div class="faq__list">
+      {%- for block in section.blocks -%}
+        <details class="faq__item" {{ block.shopify_attributes }}{% if block.settings.open %} open{% endif %}>
+          <summary class="faq__question">
+            <span>{{ block.settings.question }}</span>
+            <span class="faq__icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="faq__answer rte">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .faq__inner { max-width: 46rem; margin: 0 auto; }
+  .faq__item { border-bottom: 1px solid rgba(var(--color-foreground), 0.15); }
+  .faq__question { display: flex; justify-content: space-between; align-items: center; gap: 1rem; cursor: pointer; padding: 1rem 0; font-weight: 600; list-style: none; }
+  .faq__question::-webkit-details-marker { display: none; }
+  .faq__icon { font-size: 1.25rem; transition: transform 0.2s; }
+  .faq__item[open] .faq__icon { transform: rotate(45deg); }
+  .faq__answer { padding-bottom: 1rem; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Frequently asked questions" }
+  ],
+  "blocks": [
+    {
+      "type": "item", "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "What is your return policy?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Describe your policy here.</p>" },
+        { "type": "checkbox", "id": "open", "label": "Open by default", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "FAQ", "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }] }
+  ]
+}
+{% endschema %}

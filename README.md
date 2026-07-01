@@ -95,7 +95,9 @@ Partner / Payment Apps APIs. Add it to your editor to get Liquid-aware autocompl
 ## Status
 
 - [x] Shared core (layout, settings, CSS-var seam, locales)
-- [x] Section library (header/footer + 5 content + 10 main sections)
+- [x] Section library (header/footer + 11 content + 10 main sections)
+  - content: hero, rich-text, featured-collection, image-with-text, multicolumn,
+    newsletter, **faq, testimonials, logo-list, collection-list, countdown, slideshow**
 - [x] Generator + compose/zip + structural verify + tests
 - [x] 4 presets (Minimal Mono, Warm Boutique, Bold Pop, Noir Luxe)
 - [x] `blog` / `article` / `password` / `gift_card` templates (+ password layout)

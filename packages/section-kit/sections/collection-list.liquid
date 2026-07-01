@@ -1,0 +1,51 @@
+<div class="collection-list section">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section__header"><h2>{{ section.settings.heading }}</h2></div>
+    {%- endif -%}
+
+    <div class="grid grid--{{ section.settings.columns }}">
+      {%- for block in section.blocks -%}
+        {%- assign collection = collections[block.settings.collection] -%}
+        <a href="{{ collection.url | default: '#' }}" class="collection-tile" {{ block.shopify_attributes }}>
+          <div class="collection-tile__media">
+            {%- if collection.featured_image -%}
+              {{ collection.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '350, 700', sizes: '(min-width: 750px) 33vw, 100vw', alt: collection.title }}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: '' }}
+            {%- endif -%}
+          </div>
+          <h3 class="collection-tile__title">{{ block.settings.custom_title | default: collection.title | default: 'Collection' }}</h3>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .collection-tile { text-decoration: none; display: block; position: relative; }
+  .collection-tile__media img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: var(--inputs-radius); }
+  .collection-tile__title { margin: 0.6rem 0 0; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection list",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by category" },
+    { "type": "range", "id": "columns", "label": "Columns", "min": 2, "max": 4, "step": 1, "default": 3 }
+  ],
+  "blocks": [
+    {
+      "type": "item", "name": "Collection",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "custom_title", "label": "Custom title" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Collection list", "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }] }
+  ]
+}
+{% endschema %}

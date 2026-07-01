@@ -1,0 +1,61 @@
+<div class="testimonials section">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section__header"><h2>{{ section.settings.heading }}</h2></div>
+    {%- endif -%}
+
+    <div class="grid grid--{{ section.settings.columns }}">
+      {%- for block in section.blocks -%}
+        <figure class="testimonial" {{ block.shopify_attributes }}>
+          {%- if section.settings.show_stars -%}
+            <div class="testimonial__stars" aria-label="{{ block.settings.rating }} out of 5">
+              {%- for i in (1..5) -%}{% if i <= block.settings.rating %}★{% else %}☆{% endif %}{%- endfor -%}
+            </div>
+          {%- endif -%}
+          <blockquote class="testimonial__quote">{{ block.settings.quote }}</blockquote>
+          <figcaption class="testimonial__author">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 96 | image_tag: loading: 'lazy', class: 'testimonial__avatar', widths: '48, 96', alt: block.settings.name }}
+            {%- endif -%}
+            <span>{{ block.settings.name }}{% if block.settings.detail != blank %}<small>{{ block.settings.detail }}</small>{% endif %}</span>
+          </figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .testimonial { margin: 0; padding: 1.5rem; border: 1px solid rgba(var(--color-foreground), 0.12); border-radius: var(--inputs-radius); display: grid; gap: 0.75rem; }
+  .testimonial__stars { color: rgb(var(--color-accent)); letter-spacing: 2px; }
+  .testimonial__quote { margin: 0; font-size: 1.05rem; }
+  .testimonial__author { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; }
+  .testimonial__author small { display: block; font-weight: 400; opacity: 0.65; }
+  .testimonial__avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What customers say" },
+    { "type": "range", "id": "columns", "label": "Columns", "min": 1, "max": 4, "step": 1, "default": 3 },
+    { "type": "checkbox", "id": "show_stars", "label": "Show star rating", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial", "name": "Testimonial",
+      "settings": [
+        { "type": "richtext", "id": "quote", "label": "Quote", "default": "<p>This is my favorite purchase this year.</p>" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Alex P." },
+        { "type": "text", "id": "detail", "label": "Detail", "default": "Verified buyer" },
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "image_picker", "id": "image", "label": "Avatar" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Testimonials", "blocks": [{ "type": "testimonial" }, { "type": "testimonial" }, { "type": "testimonial" }] }
+  ]
+}
+{% endschema %}
