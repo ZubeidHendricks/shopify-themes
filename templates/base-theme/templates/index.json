@@ -1,46 +1,159 @@
 {
   "sections": {
-    "hero": { "type": "hero-banner", "settings": {} },
-    "featured": { "type": "featured-collection", "settings": {} },
-    "image_with_text": { "type": "image-with-text", "settings": {} },
-    "multicolumn": {
-      "type": "multicolumn",
-      "blocks": {
-        "c1": { "type": "column", "settings": { "heading": "Free shipping", "text": "<p>On all orders over $50.</p>" } },
-        "c2": { "type": "column", "settings": { "heading": "Easy returns", "text": "<p>30-day no-hassle returns.</p>" } },
-        "c3": { "type": "column", "settings": { "heading": "Secure checkout", "text": "<p>Encrypted and protected.</p>" } }
-      },
-      "block_order": ["c1", "c2", "c3"]
+    "hero": {
+      "type": "hero-banner",
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {}
+    },
+    "image_with_text": {
+      "type": "image-with-text",
+      "settings": {}
     },
     "testimonials": {
       "type": "testimonials",
       "blocks": {
-        "t1": { "type": "testimonial", "settings": { "name": "Alex P.", "quote": "<p>Best purchase I've made this year.</p>" } },
-        "t2": { "type": "testimonial", "settings": { "name": "Jordan M.", "quote": "<p>Quality exceeded my expectations.</p>" } },
-        "t3": { "type": "testimonial", "settings": { "name": "Sam R.", "quote": "<p>Fast shipping and great support.</p>" } }
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Alex P.",
+            "quote": "<p>Best purchase I've made this year.</p>"
+          }
+        },
+        "t2": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Jordan M.",
+            "quote": "<p>Quality exceeded my expectations.</p>"
+          }
+        },
+        "t3": {
+          "type": "testimonial",
+          "settings": {
+            "name": "Sam R.",
+            "quote": "<p>Fast shipping and great support.</p>"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3"]
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ]
     },
     "logos": {
       "type": "logo-list",
       "blocks": {
-        "l1": { "type": "logo", "settings": {} },
-        "l2": { "type": "logo", "settings": {} },
-        "l3": { "type": "logo", "settings": {} },
-        "l4": { "type": "logo", "settings": {} }
+        "l1": {
+          "type": "logo",
+          "settings": {}
+        },
+        "l2": {
+          "type": "logo",
+          "settings": {}
+        },
+        "l3": {
+          "type": "logo",
+          "settings": {}
+        },
+        "l4": {
+          "type": "logo",
+          "settings": {}
+        }
       },
-      "block_order": ["l1", "l2", "l3", "l4"]
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4"
+      ]
     },
     "faq": {
       "type": "faq",
       "blocks": {
-        "f1": { "type": "item", "settings": {} },
-        "f2": { "type": "item", "settings": { "question": "How long does shipping take?", "answer": "<p>2–5 business days.</p>" } },
-        "f3": { "type": "item", "settings": { "question": "Do you ship internationally?", "answer": "<p>Yes, to most countries.</p>" } }
+        "f1": {
+          "type": "item",
+          "settings": {}
+        },
+        "f2": {
+          "type": "item",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>2–5 business days.</p>"
+          }
+        },
+        "f3": {
+          "type": "item",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Yes, to most countries.</p>"
+          }
+        }
       },
-      "block_order": ["f1", "f2", "f3"]
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ]
     },
-    "newsletter": { "type": "newsletter", "settings": {} }
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    },
+    "trust": {
+      "type": "trust-badges",
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "heading": "Free shipping",
+            "text": "On all orders over $50"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Easy returns",
+            "text": "30-day no-hassle returns"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "heading": "Secure checkout",
+            "text": "Encrypted and protected"
+          }
+        },
+        "b4": {
+          "type": "item",
+          "settings": {
+            "icon": "chat",
+            "heading": "Here to help",
+            "text": "Support 7 days a week"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ]
+    }
   },
-  "order": ["hero", "featured", "image_with_text", "multicolumn", "testimonials", "logos", "faq", "newsletter"]
+  "order": [
+    "hero",
+    "featured",
+    "image_with_text",
+    "trust",
+    "testimonials",
+    "logos",
+    "faq",
+    "newsletter"
+  ]
 }

@@ -8,16 +8,37 @@
     --color-foreground: {{ settings.color_foreground.red }}, {{ settings.color_foreground.green }}, {{ settings.color_foreground.blue }};
     --color-accent: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
     --color-accent-text: {{ settings.color_accent_text.red }}, {{ settings.color_accent_text.green }}, {{ settings.color_accent_text.blue }};
+    --color-border: {{ settings.color_border.red }}, {{ settings.color_border.green }}, {{ settings.color_border.blue }};
+    --color-subtle-background: {{ settings.color_subtle_background.red }}, {{ settings.color_subtle_background.green }}, {{ settings.color_subtle_background.blue }};
+    --color-sale: {{ settings.color_sale.red }}, {{ settings.color_sale.green }}, {{ settings.color_sale.blue }};
+    --color-sale-text: {{ settings.color_sale_text.red }}, {{ settings.color_sale_text.green }}, {{ settings.color_sale_text.blue }};
+    --color-badge: {{ settings.color_badge.red }}, {{ settings.color_badge.green }}, {{ settings.color_badge.blue }};
+    --color-badge-text: {{ settings.color_badge_text.red }}, {{ settings.color_badge_text.green }}, {{ settings.color_badge_text.blue }};
+    --color-success: {{ settings.color_success.red }}, {{ settings.color_success.green }}, {{ settings.color_success.blue }};
+    --color-error: {{ settings.color_error.red }}, {{ settings.color_error.green }}, {{ settings.color_error.blue }};
 
     --font-heading-family: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
     --font-heading-weight: {{ settings.font_heading.weight }};
+    --font-heading-scale: {{ settings.font_heading_scale | divided_by: 100.0 }};
+    --font-heading-spacing: {{ settings.font_heading_spacing }}px;
+    --font-heading-transform: {% if settings.font_heading_uppercase %}uppercase{% else %}none{% endif %};
     --font-body-family: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
     --font-body-weight: {{ settings.font_body.weight }};
+    --font-body-scale: {{ settings.font_body_scale | divided_by: 100.0 }};
 
     --page-width: {{ settings.page_width }}px;
     --spacing-sections: {{ settings.spacing_sections }}px;
     --buttons-radius: {{ settings.buttons_radius }}px;
     --inputs-radius: {{ settings.inputs_radius }}px;
+    --media-radius: {{ settings.media_radius }}px;
+
+    --grid-columns-desktop: {{ settings.grid_columns_desktop }};
+    --grid-columns-mobile: {{ settings.grid_columns_mobile }};
+    {%- case settings.card_image_ratio -%}
+      {%- when 'portrait' -%}--card-image-ratio: 3 / 4;
+      {%- when 'natural' -%}--card-image-ratio: auto;
+      {%- else -%}--card-image-ratio: 1;
+    {%- endcase %}
   }
 
   {{ settings.font_body | font_face: font_display: 'swap' }}

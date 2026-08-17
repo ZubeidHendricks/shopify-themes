@@ -129,5 +129,26 @@
     else if (e.target.closest('[data-change="-1"]')) change(key, Math.max(qty - 1, 0));
   });
 
+  // Sticky add-to-cart (mobile). Mirrors the main product button; shows once the
+  // real one scrolls out of view. IntersectionObserver only, no scroll listener.
+  var stickyBar = document.querySelector('[data-sticky-atc]');
+  var mainAtc = document.querySelector('[data-product-atc]');
+  if (stickyBar && mainAtc && 'IntersectionObserver' in window) {
+    stickyBar.hidden = false;
+    new IntersectionObserver(function (entries) {
+      stickyBar.classList.toggle('is-visible', !entries[0].isIntersecting);
+    }, { rootMargin: '0px 0px -80px 0px' }).observe(mainAtc);
+
+    var stickyBtn = stickyBar.querySelector('[data-sticky-atc-button]');
+    if (stickyBtn) stickyBtn.addEventListener('click', function () { mainAtc.click(); });
+  }
+
+  // Collection filters / sort: submit on change so the form works without a
+  // button. The <noscript> submit button covers the no-JS case.
+  var filterForm = document.getElementById('CollectionFilterForm');
+  if (filterForm) {
+    filterForm.addEventListener('change', function () { filterForm.submit(); });
+  }
+
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
 })();

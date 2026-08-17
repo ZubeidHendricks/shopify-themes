@@ -1,19 +1,91 @@
-{%- comment -%} Usage: {% render 'product-card', product: product %} {%- endcomment -%}
-<div class="product-card">
-  <a href="{{ product.url }}" class="product-card__link">
-    <div class="product-card__media">
-      {%- if product.featured_media -%}
-        {{ product.featured_media | image_url: width: 600 | image_tag:
-            loading: 'lazy', widths: '300, 600', sizes: '(min-width: 750px) 25vw, 50vw',
-            alt: product.featured_media.alt | default: product.title }}
+{%- comment -%}
+  Product card. Usage: {% render 'product-card', product: product %}
+
+  Everything below is settings-driven (Theme settings > Product card) so a preset
+  can restyle and re-scope the card without touching Liquid. Quick add posts to
+  a plain /cart/add form — the delegated handler in cart.js intercepts it, so no
+  extra JavaScript ships for this.
+{%- endcomment -%}
+{%- liquid
+  assign hover_media = nil
+  if settings.card_hover_image and product.media.size > 1
+    assign hover_media = product.media[1]
+  endif
+
+  assign swatch_option = nil
+  if settings.card_show_swatches
+    for option in product.options_with_values
+      if option.name == settings.card_swatch_option
+        assign swatch_option = option
+        break
+      endif
+    endfor
+  endif
+-%}
+<div class="product-card product-card--{{ settings.card_alignment }}">
+  <div class="product-card__media-wrap">
+    <a href="{{ product.url }}" class="product-card__link" tabindex="-1" aria-hidden="true">
+      <div class="product-card__media{% if hover_media %} product-card__media--has-hover{% endif %}">
+        {%- if product.featured_media -%}
+          {{ product.featured_media | image_url: width: 800 | image_tag:
+              loading: 'lazy', class: 'product-card__image',
+              widths: '200, 300, 400, 600, 800',
+              sizes: '(min-width: 750px) 25vw, 50vw',
+              alt: product.featured_media.alt | default: product.title }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
+        {%- endif -%}
+        {%- if hover_media -%}
+          {{ hover_media | image_url: width: 800 | image_tag:
+              loading: 'lazy', class: 'product-card__image product-card__image--hover',
+              widths: '200, 300, 400, 600, 800',
+              sizes: '(min-width: 750px) 25vw, 50vw', alt: '' }}
+        {%- endif -%}
+      </div>
+    </a>
+
+    {% render 'product-badges', product: product %}
+
+    {%- if settings.card_quick_add and product.available -%}
+      {%- if product.variants.size == 1 -%}
+        {%- form 'product', product, class: 'product-card__quick-add' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <button type="submit" name="add" class="button button--small">
+            {{ 'products.product.quick_add' | t }}
+          </button>
+        {%- endform -%}
       {%- else -%}
-        {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
+        <a href="{{ product.url }}" class="button button--small product-card__quick-add">
+          {{ 'products.product.choose_options' | t }}
+        </a>
       {%- endif -%}
-    </div>
-    <h3 class="product-card__title">{{ product.title }}</h3>
-  </a>
-  {% render 'price', product: product %}
-  {%- if product.available == false -%}
-    <span class="product-card__badge">{{ 'products.product.sold_out' | t }}</span>
-  {%- endif -%}
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__info">
+    {%- if settings.card_show_vendor and product.vendor != blank -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}" class="product-card__title-link">{{ product.title }}</a>
+    </h3>
+
+    {% render 'price', product: product %}
+
+    {%- if swatch_option -%}
+      <ul class="product-card__swatches" role="list">
+        {%- for value in swatch_option.values limit: 5 -%}
+          <li class="product-card__swatch"
+              style="--swatch: {% if value.swatch.color %}{{ value.swatch.color }}{% else %}{{ value | downcase | replace: ' ', '' }}{% endif %};"
+              {% if value.swatch.image %}data-image="{{ value.swatch.image | image_url: width: 40 }}"{% endif %}>
+            <span class="visually-hidden">{{ value }}</span>
+          </li>
+        {%- endfor -%}
+        {%- if swatch_option.values.size > 5 -%}
+          <li class="product-card__swatch-more">+{{ swatch_option.values.size | minus: 5 }}</li>
+        {%- endif -%}
+      </ul>
+    {%- endif -%}
+  </div>
 </div>

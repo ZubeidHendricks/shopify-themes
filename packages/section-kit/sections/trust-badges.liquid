@@ -1,0 +1,77 @@
+{%- comment -%}
+  Trust / policy bar. Inline SVG icons only — no icon font, no external request.
+{%- endcomment -%}
+<div class="section trust-bar" {{ section.shopify_attributes }}>
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="trust-bar__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    <ul class="trust-bar__list grid grid--{{ section.blocks.size | at_most: 4 }}" role="list">
+      {%- for block in section.blocks -%}
+        <li class="trust-bar__item" {{ block.shopify_attributes }}>
+          <span class="trust-bar__icon" aria-hidden="true">
+            {%- case block.settings.icon -%}
+              {%- when 'truck' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3h13v13H1zM14 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/></svg>
+              {%- when 'return' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+              {%- when 'lock' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              {%- when 'chat' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-6a8 8 0 0 1 8-8h2a8 8 0 0 1 8 3z"/></svg>
+              {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+            {%- endcase -%}
+          </span>
+          {%- if block.settings.heading != blank -%}
+            <h3 class="trust-bar__title">{{ block.settings.heading }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="trust-bar__text">{{ block.settings.text }}</p>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "tag": "section",
+  "class": "section-trust-badges",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Badge",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon",
+          "options": [
+            { "value": "truck", "label": "Shipping" },
+            { "value": "return", "label": "Returns" },
+            { "value": "lock", "label": "Secure payment" },
+            { "value": "chat", "label": "Support" },
+            { "value": "check", "label": "Check" }
+          ], "default": "truck" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Free shipping" },
+        { "type": "text", "id": "text", "label": "Text", "default": "On all orders over $50" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "truck", "heading": "Free shipping" } },
+        { "type": "item", "settings": { "icon": "return", "heading": "Easy returns" } },
+        { "type": "item", "settings": { "icon": "lock", "heading": "Secure payment" } },
+        { "type": "item", "settings": { "icon": "chat", "heading": "Support" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

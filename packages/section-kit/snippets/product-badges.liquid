@@ -1,0 +1,53 @@
+{%- comment -%}
+  Product badges. Usage: {% render 'product-badges', product: product %}
+
+  Sale % is computed from compare_at_price_max / price_min rather than the first
+  variant, so multi-variant products with mixed pricing stay truthful.
+  "New" is time-windowed off published_at — the merchant sets one number of days
+  and badges appear and expire on their own, with no tagging and no app.
+{%- endcomment -%}
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price_max > product.price_min
+    assign on_sale = true
+  endif
+
+  assign is_new = false
+  if settings.badge_new
+    assign new_window = settings.badge_new_days | times: 86400
+    assign published_ts = product.published_at | date: '%s' | plus: 0
+    assign now_ts = 'now' | date: '%s' | plus: 0
+    assign age = now_ts | minus: published_ts
+    if age >= 0 and age < new_window
+      assign is_new = true
+    endif
+  endif
+-%}
+<div class="badges">
+  {%- if settings.badge_sold_out and product.available == false -%}
+    <span class="badge badge--sold-out">{{ 'products.product.sold_out' | t }}</span>
+  {%- elsif settings.badge_sale and on_sale -%}
+    {%- case settings.badge_sale_style -%}
+      {%- when 'percent' -%}
+        {%- assign percent = product.compare_at_price_max | minus: product.price_min | times: 100 | divided_by: product.compare_at_price_max -%}
+        <span class="badge badge--sale">{{ 'products.product.save_percent' | t: percent: percent }}</span>
+      {%- when 'amount' -%}
+        {%- assign saved = product.compare_at_price_max | minus: product.price_min | money -%}
+        <span class="badge badge--sale">{{ 'products.product.save_amount' | t: amount: saved }}</span>
+      {%- else -%}
+        <span class="badge badge--sale">{{ 'products.product.on_sale' | t }}</span>
+    {%- endcase -%}
+  {%- endif -%}
+
+  {%- if is_new -%}
+    <span class="badge badge--new">{{ 'products.product.badge_new' | t }}</span>
+  {%- endif -%}
+
+  {%- assign tag_badges = settings.badge_tags | split: ',' -%}
+  {%- for tag in tag_badges -%}
+    {%- assign tag_name = tag | strip -%}
+    {%- if tag_name != blank and product.tags contains tag_name -%}
+      <span class="badge badge--tag">{{ tag_name }}</span>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
