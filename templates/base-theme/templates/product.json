@@ -1,4 +1,67 @@
 {
-  "sections": { "main": { "type": "main-product", "settings": {} } },
-  "order": ["main"]
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "tabs": {
+      "type": "product-tabs",
+      "blocks": {
+        "t1": {
+          "type": "description",
+          "settings": {}
+        },
+        "t2": {
+          "type": "text",
+          "settings": {
+            "heading": "Shipping & returns",
+            "content": "<p>Free shipping over $50. 30-day returns.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2"
+      ]
+    },
+    "trust": {
+      "type": "trust-badges",
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "heading": "Free shipping",
+            "text": "On orders over $50"
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Easy returns",
+            "text": "30 days"
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "heading": "Secure checkout",
+            "text": "Encrypted"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "tabs",
+    "trust"
+  ]
 }

@@ -1,3 +1,8 @@
+{%- comment -%}
+  Product grid. Columns, page size, sort and filters come from Theme settings >
+  Collection grid so every collection template stays consistent — the merchant
+  sets them once instead of per section.
+{%- endcomment -%}
 <div class="collection section">
   <div class="page-width">
     <header class="collection__header">
@@ -7,9 +12,48 @@
       {%- endif -%}
     </header>
 
-    {%- paginate collection.products by section.settings.products_per_page -%}
+    {%- paginate collection.products by settings.grid_products_per_page -%}
+      {%- if settings.grid_show_filters or settings.grid_show_sort -%}
+        <form class="collection__toolbar" id="CollectionFilterForm">
+          {%- if settings.grid_show_filters -%}
+            {%- for filter in collection.filters -%}
+              {%- if filter.type == 'list' and filter.values.size > 0 -%}
+                <details class="collection__filter">
+                  <summary>{{ filter.label }}</summary>
+                  <ul role="list">
+                    {%- for value in filter.values -%}
+                      <li>
+                        <label>
+                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}>
+                          {{ value.label }} ({{ value.count }})
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- if settings.grid_show_sort -%}
+            <div class="collection__sort">
+              <label for="SortBy">{{ 'collections.sort_by' | t }}</label>
+              <select id="SortBy" name="sort_by">
+                {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+                {%- for option in collection.sort_options -%}
+                  <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name }}</option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endif -%}
+
+          <noscript><button type="submit" class="button button--small">{{ 'collections.apply' | t }}</button></noscript>
+        </form>
+      {%- endif -%}
+
       {%- if collection.products.size > 0 -%}
-        <div class="grid grid--{{ section.settings.columns }}">
+        <div class="grid grid--products">
           {%- for product in collection.products -%}
             {% render 'product-card', product: product %}
           {%- endfor -%}
@@ -34,6 +78,15 @@
 
 {% stylesheet %}
   .collection__header { margin-bottom: 2rem; }
+  .collection__toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1.5rem; }
+  .collection__filter { position: relative; }
+  .collection__filter summary { cursor: pointer; padding: 0.4rem 0.75rem; border: 1px solid rgb(var(--color-border)); border-radius: var(--inputs-radius); list-style: none; }
+  .collection__filter ul { list-style: none; margin: 0.4rem 0 0; padding: 0.75rem; display: grid; gap: 0.35rem;
+    border: 1px solid rgb(var(--color-border)); border-radius: var(--inputs-radius); background: rgb(var(--color-background)); }
+  @media (min-width: 750px) {
+    .collection__filter ul { position: absolute; z-index: 40; min-width: 12rem; box-shadow: 0 12px 28px rgba(0,0,0,0.1); }
+  }
+  .collection__sort { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
   .pagination { display: flex; gap: 0.75rem; justify-content: center; margin-top: 2rem; }
 {% endstylesheet %}
 
@@ -41,8 +94,7 @@
 {
   "name": "Product grid",
   "settings": [
-    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 24, "step": 4, "default": 12 },
-    { "type": "range", "id": "columns", "label": "Columns", "min": 2, "max": 4, "step": 1, "default": 4 }
+    { "type": "paragraph", "content": "Columns, products per page, sort and filters are set in Theme settings > Collection grid." }
   ]
 }
 {% endschema %}

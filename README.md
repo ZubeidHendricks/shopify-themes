@@ -95,16 +95,47 @@ Partner / Payment Apps APIs. Add it to your editor to get Liquid-aware autocompl
 ## Status
 
 - [x] Shared core (layout, settings, CSS-var seam, locales)
-- [x] Section library (header/footer + 11 content + 10 main sections)
+- [x] Section library (header/footer + 13 content + 10 main sections)
   - content: hero, rich-text, featured-collection, image-with-text, multicolumn,
-    newsletter, **faq, testimonials, logo-list, collection-list, countdown, slideshow**
+    newsletter, faq, testimonials, logo-list, collection-list, countdown, slideshow,
+    **product-tabs, trust-badges**
 - [x] Generator + compose/zip + structural verify + tests
 - [x] 4 presets (Minimal Mono, Warm Boutique, Bold Pop, Noir Luxe)
 - [x] `blog` / `article` / `password` / `gift_card` templates (+ password layout)
 - [x] `customers/*` templates (login, account, register, addresses, order, activate, reset)
 - [x] AJAX cart drawer + predictive search (vanilla JS, no framework)
+- [x] **Merchandising card**: sale badge (%/amount/text), time-windowed new badge,
+      tag badges, second-image-on-hover, colour swatches, quick add
+- [x] **CSS-only mega menu** (two levels of link_list, no JS)
+- [x] **Sticky mobile add-to-cart** (IntersectionObserver, ~12 lines)
+- [x] **Collection filters + sort** driven by global settings
+- [x] **67 global settings** in a Pipeline/Impulse-shaped taxonomy
+- [x] **Schema localization at build time** — 276 `t:` keys + generated
+      `locales/en.default.schema.json` per theme
 - [x] 4 themes built (aurora-mono, bloom-boutique, lumen-noir, volt-pop) — one per preset
 - [x] Passes real `shopify theme check` — **0 offenses** across all 4 themes
 - [ ] More presets / section packs
 - [ ] Localized cart/search section-rendering for multi-language polish
 - [ ] Submit a flagship to the Theme Store
+
+### Why the schema localization is a build step
+
+Theme Store review requires section and settings schema copy to be `t:` keys
+resolved from `locales/*.schema.json`, not hardcoded English. Writing those keys
+by hand makes the source unreadable, so `scripts/localize-schemas.mjs` runs
+during compose: authors keep plain English in `packages/`, and `dist/` ships the
+keys plus a generated catalog. A test asserts no unlocalized string survives.
+
+Of the ~98 commercial themes surveyed in [`docs/theme-teardown.md`](docs/theme-teardown.md),
+**zero** localize their schemas — including Pipeline, Impulse and Icon.
+
+### Weight, measured
+
+| | JS | CSS | zip |
+| --- | --- | --- | --- |
+| This factory (per theme) | **8.9 KB** | **8.7 KB** | **65 KB** |
+| Pipeline (Theme Store) | 346 KB | 315 KB | — |
+| Impulse 3.4 (Theme Store) | 586 KB | 588 KB | — |
+| Lezada (ThemeForest) | 1477 KB | 3482 KB | — |
+
+No jQuery, no Bootstrap, no carousel library. See the teardown for the full table.

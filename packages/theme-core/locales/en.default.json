@@ -17,13 +17,22 @@
       "title": "Page not found",
       "body": "The page you were looking for does not exist.",
       "link": "Continue shopping"
+    },
+    "trust": {
+      "heading": "Why shop with us"
+    },
+    "tabs": {
+      "description": "Description",
+      "shipping": "Shipping & returns",
+      "reviews": "Reviews"
     }
   },
   "accessibility": {
     "skip_to_text": "Skip to content",
     "close": "Close",
     "menu": "Menu",
-    "cart": "Cart"
+    "cart": "Cart",
+    "submenu": "Open submenu for {{ title }}"
   },
   "products": {
     "product": {
@@ -32,7 +41,17 @@
       "unavailable": "Unavailable",
       "quantity": "Quantity",
       "price_from": "From {{ price }}",
-      "on_sale": "Sale"
+      "on_sale": "Sale",
+      "badge_new": "New",
+      "save_percent": "Save {{ percent }}%",
+      "save_amount": "Save {{ amount }}",
+      "quick_add": "Quick add",
+      "choose_options": "Choose options",
+      "vendor": "Vendor",
+      "sku": "SKU",
+      "share": "Share",
+      "pickup_available": "Pickup available",
+      "pickup_unavailable": "Pickup currently unavailable"
     }
   },
   "cart": {
@@ -42,11 +61,15 @@
     "checkout": "Check out",
     "remove": "Remove",
     "continue_shopping": "Continue shopping",
-    "taxes_note": "Taxes and shipping calculated at checkout."
+    "taxes_note": "Taxes and shipping calculated at checkout.",
+    "free_shipping_progress": "You're {{ amount }} away from free shipping",
+    "free_shipping_reached": "You've earned free shipping."
   },
   "collections": {
     "empty": "No products found.",
-    "view_all": "View all"
+    "view_all": "View all",
+    "sort_by": "Sort by",
+    "apply": "Apply"
   },
   "customer": {
     "account": {

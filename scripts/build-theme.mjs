@@ -6,6 +6,7 @@ import { rmSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { CORE, KIT, BASE, PRESETS, THEMES, readJSON, copyTree, listThemes } from './lib.mjs';
+import { localizeThemeSchemas } from './localize-schemas.mjs';
 
 function build(slug) {
   const themeDir = join(THEMES, slug);
@@ -45,6 +46,10 @@ function build(slug) {
   // 6. Per-theme overrides overlay (custom sections/templates win).
   copyTree(join(themeDir, 'overrides'), dist);
 
+  // 6b. Swap schema copy for `t:` keys and emit locales/en.default.schema.json.
+  //     Runs after overrides so per-theme sections are localized too.
+  const schemaKeys = localizeThemeSchemas(dist);
+
   // Theme Check config (local lint only — excluded from the upload zip).
   // ValidScopedCSSClass is off by design: shared looks live in base.css (the
   // restyle seam), so classes are intentionally used across sections.
@@ -58,9 +63,9 @@ function build(slug) {
     const zip = join(themeDir, `${slug}.zip`);
     rmSync(zip, { force: true });
     execFileSync('zip', ['-r', '-q', zip, '.', '-x', '.*'], { cwd: dist });
-    console.log(`  built themes/${slug}/dist  +  ${slug}.zip  (preset: ${config.preset})`);
+    console.log(`  built themes/${slug}/dist  +  ${slug}.zip  (preset: ${config.preset}, ${schemaKeys} schema strings localized)`);
   } catch {
-    console.log(`  built themes/${slug}/dist  (zip skipped — 'zip' not found)`);
+    console.log(`  built themes/${slug}/dist  (zip skipped — 'zip' not found, ${schemaKeys} schema strings localized)`);
   }
 }
 

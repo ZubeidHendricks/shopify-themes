@@ -1,27 +1,49 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+-%}
 <div class="product section">
   <div class="page-width product__layout">
     <div class="product__media">
-      {%- if product.featured_media -%}
-        {{ product.featured_media | image_url: width: 1200 | image_tag:
-            loading: 'eager', widths: '600, 900, 1200', sizes: '(min-width: 750px) 50vw, 100vw',
-            alt: product.featured_media.alt | default: product.title }}
-      {%- else -%}
-        {{ 'product-1' | placeholder_svg_tag: 'product__placeholder' }}
-      {%- endif -%}
+      <div class="product__media-main">
+        {%- if product.featured_media -%}
+          {{ product.featured_media | image_url: width: 1200 | image_tag:
+              loading: 'eager', widths: '600, 900, 1200', sizes: '(min-width: 750px) 50vw, 100vw',
+              alt: product.featured_media.alt | default: product.title }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'product__placeholder' }}
+        {%- endif -%}
+        {% render 'product-badges', product: product %}
+      </div>
+
       {%- if product.media.size > 1 -%}
-        <div class="product__thumbs grid grid--4">
-          {%- for media in product.media offset: 1 limit: 7 -%}
-            {{ media | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100, 200', alt: media.alt }}
-          {%- endfor -%}
-        </div>
+        {%- if settings.product_gallery_layout == 'stacked' -%}
+          <div class="product__stacked">
+            {%- for media in product.media offset: 1 -%}
+              {{ media | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '600, 900, 1200', sizes: '(min-width: 750px) 50vw, 100vw', alt: media.alt }}
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="product__thumbs grid grid--4">
+            {%- for media in product.media offset: 1 limit: 7 -%}
+              {{ media | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100, 200', alt: media.alt }}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       {%- endif -%}
     </div>
 
     <div class="product__info">
+      {%- if settings.product_show_vendor and product.vendor != blank -%}
+        <p class="product__vendor">{{ product.vendor }}</p>
+      {%- endif -%}
+
       <h1>{{ product.title }}</h1>
       <div class="product__price">{% render 'price', product: product %}</div>
 
-      {%- assign current_variant = product.selected_or_first_available_variant -%}
+      {%- if settings.product_show_sku and current_variant.sku != blank -%}
+        <p class="product__sku">{{ 'products.product.sku' | t }}: {{ current_variant.sku }}</p>
+      {%- endif -%}
+
       {% form 'product', product, id: 'ProductForm' %}
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
@@ -38,12 +60,14 @@
 
         <input type="hidden" name="id" value="{{ current_variant.id }}">
 
-        <div class="product__quantity">
-          <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
-          <input type="number" id="Quantity" name="quantity" value="1" min="1">
-        </div>
+        {%- if settings.product_show_quantity -%}
+          <div class="product__quantity">
+            <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1">
+          </div>
+        {%- endif -%}
 
-        <button type="submit" name="add" class="button product__atc"{% unless current_variant.available %} disabled{% endunless %}>
+        <button type="submit" name="add" class="button product__atc" data-product-atc{% unless current_variant.available %} disabled{% endunless %}>
           {%- if current_variant.available -%}
             {{ 'products.product.add_to_cart' | t }}
           {%- else -%}
@@ -52,19 +76,68 @@
         </button>
       {% endform %}
 
+      {%- if settings.product_show_pickup -%}
+        {{ 'products.product.pickup_available' | t | prepend: '<p class="product__pickup" hidden>' | append: '</p>' }}
+      {%- endif -%}
+
       {%- if product.description != blank -%}
         <div class="product__description rte">{{ product.description }}</div>
+      {%- endif -%}
+
+      {%- if settings.product_show_share -%}
+        <div class="product__share">
+          <span>{{ 'products.product.share' | t }}</span>
+          <a href="https://www.facebook.com/sharer.php?u={{ shop.url }}{{ product.url }}" rel="noopener" target="_blank">Facebook</a>
+          <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ product.url }}" rel="noopener" target="_blank">X</a>
+          <a href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ product.url }}" rel="noopener" target="_blank">Pinterest</a>
+        </div>
       {%- endif -%}
     </div>
   </div>
 </div>
 
+{%- if settings.product_sticky_atc -%}
+  <div class="sticky-atc" data-sticky-atc hidden>
+    <div class="page-width sticky-atc__inner">
+      <div class="sticky-atc__meta">
+        <strong class="sticky-atc__title">{{ product.title }}</strong>
+        {% render 'price', product: product %}
+      </div>
+      <button type="button" class="button sticky-atc__button" data-sticky-atc-button{% unless current_variant.available %} disabled{% endunless %}>
+        {%- if current_variant.available -%}
+          {{ 'products.product.add_to_cart' | t }}
+        {%- else -%}
+          {{ 'products.product.sold_out' | t }}
+        {%- endif -%}
+      </button>
+    </div>
+  </div>
+{%- endif -%}
+
 {% stylesheet %}
   .product__layout { display: grid; gap: 2rem; }
   @media (min-width: 750px) { .product__layout { grid-template-columns: 1fr 1fr; } }
   .product__info { display: grid; gap: 1rem; align-content: start; }
+  .product__media-main { position: relative; border-radius: var(--media-radius); overflow: hidden; }
   .product__thumbs { margin-top: 1rem; }
+  .product__stacked { margin-top: 1rem; display: grid; gap: 1rem; }
+  .product__vendor { margin: 0; opacity: 0.65; font-size: 0.85rem; }
+  .product__sku { margin: 0; opacity: 0.65; font-size: 0.85rem; }
   .product__atc { width: 100%; }
+  .product__share { display: flex; gap: 0.75rem; font-size: 0.85rem; align-items: center; }
+  .sticky-atc {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+    background: rgb(var(--color-background));
+    border-top: 1px solid rgb(var(--color-border));
+    padding: 0.75rem 0;
+    transform: translateY(100%); transition: transform 0.25s ease;
+  }
+  .sticky-atc.is-visible { transform: translateY(0); }
+  .sticky-atc__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .sticky-atc__meta { display: grid; min-width: 0; }
+  .sticky-atc__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sticky-atc__button { flex: 0 0 auto; }
+  @media (min-width: 750px) { .sticky-atc { display: none; } }
 {% endstylesheet %}
 
 {% schema %}

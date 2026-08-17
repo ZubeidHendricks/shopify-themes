@@ -1,8 +1,20 @@
+{%- comment -%}
+  Header with a CSS-only mega menu. Two levels of link_list nesting render as a
+  dropdown (single column) or a mega panel (multi column). Hover opens it,
+  :focus-within keeps it keyboard-navigable — no JavaScript ships for the menu.
+{%- endcomment -%}
+{%- liquid
+  assign logo = section.settings.logo | default: settings.logo
+  assign logo_sizes = settings.logo_width | append: 'px'
+  assign logo_style = settings.logo_width | prepend: 'width: ' | append: 'px'
+-%}
 <header class="header section">
   <div class="page-width header__inner">
     <a href="{{ routes.root_url }}" class="header__logo">
-      {%- if section.settings.logo != blank -%}
-        {{ section.settings.logo | image_url: width: 300 | image_tag: loading: 'eager', alt: shop.name, widths: '150, 300' }}
+      {%- if logo != blank -%}
+        {{ logo | image_url: width: 600 | image_tag:
+            loading: 'eager', alt: shop.name, widths: '150, 300, 600',
+            sizes: logo_sizes, style: logo_style }}
       {%- else -%}
         <span class="header__logo-text">{{ shop.name }}</span>
       {%- endif -%}
@@ -11,13 +23,47 @@
     <nav class="header__nav" role="navigation">
       <ul class="header__menu">
         {%- for link in section.settings.menu.links -%}
-          <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a></li>
+          {%- assign has_children = false -%}
+          {%- if link.links.size > 0 -%}{%- assign has_children = true -%}{%- endif -%}
+          <li class="header__item{% if has_children %} header__item--has-menu{% endif %}">
+            <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}
+               {% if has_children %}aria-haspopup="true" aria-expanded="false"{% endif %}>
+              {{- link.title -}}
+              {%- if has_children -%}
+                <svg class="header__chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m1 1 4 4 4-4"/></svg>
+              {%- endif -%}
+            </a>
+
+            {%- if has_children -%}
+              {%- assign is_mega = false -%}
+              {%- for child in link.links -%}
+                {%- if child.links.size > 0 -%}{%- assign is_mega = true -%}{%- break -%}{%- endif -%}
+              {%- endfor -%}
+
+              <div class="header__dropdown{% if is_mega %} header__dropdown--mega{% endif %}">
+                <div class="{% if is_mega %}page-width {% endif %}header__dropdown-inner">
+                  {%- for child in link.links -%}
+                    <div class="header__column">
+                      <a class="header__column-title" href="{{ child.url }}">{{ child.title }}</a>
+                      {%- if child.links.size > 0 -%}
+                        <ul class="header__sublist" role="list">
+                          {%- for grandchild in child.links -%}
+                            <li><a href="{{ grandchild.url }}">{{ grandchild.title }}</a></li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endif -%}
+          </li>
         {%- endfor -%}
       </ul>
     </nav>
 
     <div class="header__actions">
-      {%- if section.settings.show_search -%}
+      {%- if section.settings.show_search and settings.search_predictive -%}
         <div class="header__search" data-predictive>
           <form action="{{ routes.search_url }}" method="get" role="search">
             <input type="search" name="q" autocomplete="off" data-predictive-input
@@ -25,11 +71,23 @@
           </form>
           <div class="predictive" data-predictive-results hidden></div>
         </div>
+      {%- elsif section.settings.show_search -%}
+        <a class="header__search-link" href="{{ routes.search_url }}">{{ 'general.search.search' | t }}</a>
       {%- endif -%}
 
-      <button type="button" class="header__cart" data-cart-toggle aria-label="{{ 'accessibility.cart' | t }}">
-        {{ 'accessibility.cart' | t }} (<span data-cart-count>{{ cart.item_count }}</span>)
-      </button>
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="header__account" href="{{ routes.account_url }}">{{ 'customer.account.title' | t }}</a>
+      {%- endif -%}
+
+      {%- if settings.cart_type == 'drawer' -%}
+        <button type="button" class="header__cart" data-cart-toggle aria-label="{{ 'accessibility.cart' | t }}">
+          {{ 'accessibility.cart' | t }} (<span data-cart-count>{{ cart.item_count }}</span>)
+        </button>
+      {%- else -%}
+        <a class="header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'accessibility.cart' | t }}">
+          {{ 'accessibility.cart' | t }} (<span data-cart-count>{{ cart.item_count }}</span>)
+        </a>
+      {%- endif -%}
     </div>
   </div>
 </header>
@@ -39,14 +97,49 @@
   .header__menu { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
   .header__menu a { text-decoration: none; }
   .header__logo-text { font-family: var(--font-heading-family); font-size: 1.25rem; font-weight: var(--font-heading-weight); }
+  .header__item { position: relative; }
+  .header__item > a { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.5rem 0; }
+  .header__chevron { width: 0.6rem; height: 0.4rem; }
+  .header__dropdown {
+    position: absolute; top: 100%; left: 0; z-index: 50; min-width: 12rem;
+    background: rgb(var(--color-background));
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--inputs-radius);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    opacity: 0; visibility: hidden; transform: translateY(0.35rem);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  }
+  .header__dropdown--mega {
+    position: fixed; left: 0; right: 0; width: 100%;
+    border-radius: 0; border-left: 0; border-right: 0; padding: 1.5rem 0;
+  }
+  .header__item--has-menu:hover > .header__dropdown,
+  .header__item--has-menu:focus-within > .header__dropdown {
+    opacity: 1; visibility: visible; transform: translateY(0);
+  }
+  .header__dropdown-inner { display: grid; gap: 1.25rem; }
+  .header__dropdown--mega .header__dropdown-inner {
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    margin: 0 auto;
+  }
+  .header__column-title { font-weight: 600; display: block; margin-bottom: 0.4rem; }
+  .header__sublist { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+  .header__sublist a { opacity: 0.8; }
+  .header__sublist a:hover { opacity: 1; text-decoration: underline; }
+  @media (max-width: 749px) {
+    .header__dropdown { position: static; opacity: 1; visibility: visible; transform: none;
+      box-shadow: none; border: 0; padding: 0 0 0 1rem; display: none; }
+    .header__item--has-menu:focus-within > .header__dropdown { display: block; }
+  }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
-    { "type": "image_picker", "id": "logo", "label": "Logo" },
-    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Falls back to the logo in Theme settings > Brand." },
+    { "type": "link_list", "id": "menu", "label": "Menu", "info": "Nest a menu two levels deep to get a mega menu panel.", "default": "main-menu" },
     { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true }
   ]
 }
